@@ -1,13 +1,20 @@
 package com.example.mytestapp;
-import android.widget.TextView;
-import android.os.Bundle;
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.os.Build;
-import android.content.Intent;
+import android.widget.TextView;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class DisplayMessageActivity extends Activity {
 
@@ -24,6 +31,27 @@ public class DisplayMessageActivity extends Activity {
 	    textView.setText(message);
 
 	    setContentView(textView);
+	    
+	    EbayClient client = new EbayClient();
+	    
+	    client.search(message, "", new JsonHttpResponseHandler(){
+	    	@Override
+            public void onSuccess(JSONObject results) {
+	    		try {
+					String timestamp = (String) results.get("Timestamp");
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+	    		Log.w("RESULTS", results.toString());
+	    	}
+	    	
+	    	@Override
+	    	public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
+	    	{
+	    		Log.e("FUCK THIS", "SHIT BROKE");
+	    	}
+	    });
 	}
 
 	/**

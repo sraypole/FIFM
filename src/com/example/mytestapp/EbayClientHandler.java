@@ -1,21 +1,37 @@
 package com.example.mytestapp;
 import com.loopj.android.http.*;
-import org.json.*;
+import java.io.IOException;
+import java.io.StringReader;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
-public class EbayClientHandler {
+public class EbayClientHandler
+{
 
-	public void getPublicTimeline() {
-        EbayClient.get("statuses/public_timeline.json", null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(JSONArray timeline) {
-                // Pull out the first event on the public timeline
-                //JSONObject firstEvent = timeline.get(0);
-                //String tweetText = firstEvent.getString("text");
+    public static void main (String args[])
+        throws XmlPullParserException, IOException
+    {
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        XmlPullParser xpp = factory.newPullParser();
 
-                // Do something with the response
-                //System.out.println(tweetText);
-            }
-        });
+        xpp.setInput(new StringReader ("<foo>Hello World!</foo>"));
+        int eventType = xpp.getEventType();
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+         if(eventType == XmlPullParser.START_DOCUMENT) {
+             System.out.println("Start document");
+         } else if(eventType == XmlPullParser.END_DOCUMENT) {
+             System.out.println("End document");
+         } else if(eventType == XmlPullParser.START_TAG) {
+             System.out.println("Start tag "+xpp.getName());
+         } else if(eventType == XmlPullParser.END_TAG) {
+             System.out.println("End tag "+xpp.getName());
+         } else if(eventType == XmlPullParser.TEXT) {
+             System.out.println("Text "+xpp.getText());
+         }
+         eventType = xpp.next();
+        }
     }
-}
+} 

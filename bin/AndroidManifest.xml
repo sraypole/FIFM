@@ -31,5 +31,5 @@
                 android:value="com.example.mytestapp.MainActivity" />
         </activity>
     </application>
-
+	<uses-permission android:name="android.permission.INTERNET" /> 
 </manifest>

@@ -25,33 +25,12 @@ public class DisplayMessageActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		Intent intent = getIntent();
-		String message = intent.getStringExtra(MainActivity.ITEM_NAME);
+		String response = intent.getStringExtra(MainActivity.ITEM_NAME);
 		TextView textView = new TextView(this);
 	    textView.setTextSize(40);
-	    textView.setText(message);
-
+	    textView.setText(response);
 	    setContentView(textView);
 	    
-	    EbayClient client = new EbayClient();
-	    
-	    client.search(message, "", new JsonHttpResponseHandler(){
-	    	@Override
-            public void onSuccess(JSONObject results) {
-	    		try {
-					String timestamp = (String) results.get("Timestamp");
-					
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-	    		Log.w("RESULTS", results.toString());
-	    	}
-	    	
-	    	@Override
-	    	public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
-	    	{
-	    		Log.e("FUCK THIS", "SHIT BROKE");
-	    	}
-	    });
 	}
 
 	/**

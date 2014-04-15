@@ -1,14 +1,24 @@
 package com.example.mytestapp;
-import android.view.View;
-import android.content.Intent;
-import android.widget.EditText;
-import android.os.Bundle;
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.EditText;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MainActivity extends Activity {
+	
 	public final static String ITEM_NAME = "com.example.mytestapp.ITEM_NAME";
 
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,13 +34,33 @@ public class MainActivity extends Activity {
     }
     
     public void sendMessage(View view) {
-    	Intent intent = new Intent(this, DisplayMessageActivity.class);
+    	final Intent intent = new Intent(this, DisplayMessageActivity.class);
     	EditText editText = (EditText) findViewById(R.id.edit_message);
-    	String message = editText.getText().toString();
-    	intent.putExtra(ITEM_NAME, message);
-        startActivity(intent);
-
-
+    	String message = editText.getText().toString(); // call ebay api here
+    	
+	    EbayClient client = new EbayClient();
+	    
+	    client.search(message, "", new JsonHttpResponseHandler(){
+	    	@Override
+            public void onSuccess(JSONObject results) {
+	    		try {
+					String timestamp = (String) results.get("Timestamp");
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+	    		Log.w("RESULTS", results.toString());
+//	    		EbayItemList items = new EbayItemList(results);
+//	    		intent.putExtra(ITEM_NAME, items);
+	    		intent.putExtra(ITEM_NAME, results.toString());
+	            startActivity(intent);
+	    	}
+	    	
+	    	@Override
+	    	public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
+	    	{
+	    		Log.e("FUCK THIS", "SHIT BROKE");
+	    	}
+	    });
     }
-    
 }
